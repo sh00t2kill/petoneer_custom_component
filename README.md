@@ -1,1 +1,3 @@
-# petoneer_custom_component
+# Revogi Petoneer Water Fountain for Home Assistant
+
+## Installation

@@ -115,4 +115,3 @@ class PetoneerSensor(SensorEntity):
     @property
     def state(self):
         return self._state
-:q

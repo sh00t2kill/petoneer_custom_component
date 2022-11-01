@@ -52,8 +52,6 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 
     pet = Petoneer()
     await pet.auth(username, password)
-    
-    _LOGGER.debug("Attempting to add entities")
     async_add_entities(
         [
             PetoneerSensor(
@@ -107,10 +105,10 @@ class PetoneerSensor(SensorEntity):
 
         # set the overall state -- use the level value for this
         self._state = attributes['level']
-        #self.async_write_ha_state()
 
-#    def extra_state_attributes(self):
-#        return self.attrs
+    @property
+    def extra_state_attributes(self):
+        return self._attrs
 
     @property
     def state(self):

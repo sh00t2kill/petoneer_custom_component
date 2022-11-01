@@ -95,7 +95,7 @@ class PetoneerSensor(SensorEntity):
 
     async def async_update(self):
         _LOGGER.debug("Updating attributes")
-        attributes = await self._pet.get_device_details(self.id)
+        attributes = await self._pet.get_device_details(self._id)
         _LOGGER.debug(f"Attributes: {attributes}")
         self._attrs = {
             ATTR_LEVEL: attributes['level'],
@@ -115,3 +115,4 @@ class PetoneerSensor(SensorEntity):
     @property
     def state(self):
         return self._state
+:q

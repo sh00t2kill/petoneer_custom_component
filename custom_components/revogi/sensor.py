@@ -66,37 +66,38 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
 class PetoneerSensor(SensorEntity):
 
     def __init__(self, pet, id):
-        super().__init__()
+        #super().__init__()
         self._pet = pet
         self._state = None
-        self.id = id
-        self.entity_id = DOMAIN + "." + self.id
-        self.attrs = {}
+        self._id = id
+        self.entity_id = DOMAIN + "." + self._id
+        self._attrs = {}
 
     @property
     def unique_id(self):
         """Return the unique ID of the sensor."""
-        return self.id
+        return self._id
 
     def device_info(self):
         return {
             "name": DEFAULT_NAME,
-            "serial": self.id
+            "serial": self._id
         }
 
+    @property
     def name(self):
-        return f"Petoneer {self.id}"
+        return f"Petoneer {self._id}"
 
 
     @property
     def device_state_attributes(self):
-        return self.attrs
+        return self._attrs
 
     async def async_update(self):
         _LOGGER.debug("Updating attributes")
         attributes = await self._pet.get_device_details(self.id)
         _LOGGER.debug(f"Attributes: {attributes}")
-        self.attrs = {
+        self._attrs = {
             ATTR_LEVEL: attributes['level'],
             ATTR_TDS: attributes['tds'],
             ATTR_LED: attributes['led'],
@@ -106,10 +107,11 @@ class PetoneerSensor(SensorEntity):
 
         # set the overall state -- use the level value for this
         self._state = attributes['level']
-        self.async_write_ha_state()
+        #self.async_write_ha_state()
 
-    def device_state_attributes(self):
-        return self.attrs
+#    def extra_state_attributes(self):
+#        return self.attrs
 
+    @property
     def state(self):
         return self._state

@@ -8,5 +8,5 @@
   "name": "Revogi Petoneer Water Fountain",
   "requirements": [],
   "version": "0.0.1",
-  "iot_class": "cloud_poll"
+  "iot_class": "cloud_push"
 }

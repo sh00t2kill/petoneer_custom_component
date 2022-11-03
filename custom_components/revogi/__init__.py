@@ -26,7 +26,7 @@ from homeassistant.helpers.discovery import async_load_platform
 
 PLATFORMS = ['sensor', 'switch']
 
-CONFIG_SCHEMA = vol.Schema(
+""" CONFIG_SCHEMA = vol.Schema(
     {
         DOMAIN: vol.Schema(
             {
@@ -40,18 +40,26 @@ CONFIG_SCHEMA = vol.Schema(
     # extra keys.
     extra=vol.ALLOW_EXTRA,
 )
+ """
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup(hass: core.HomeAssistant, config: dict)-> bool:
+async def async_setup_entry(hass: core.HomeAssistant, entry: ConfigEntry)-> bool:
     """Set up the platform.
     @NOTE: `config` is the full dict from `configuration.yaml`.
     :returns: A boolean to indicate that initialization was successful.
     """
-    conf = config[DOMAIN]
-    username = conf[CONF_USERNAME]
-    password = conf[CONF_PASSWORD]
-    serial   = conf[CONF_SERIAL]
+
+    username = entry.options[CONF_USERNAME]
+    password = entry.options[CONF_PASSWORD]
+    serial   = entry.options[CONF_SERIAL]
+
+    conf = {
+        CONF_USERNAME: username,
+        CONF_PASSWORD: password,
+        CONF_SERIAL: serial
+    }
+
     pet = Petoneer()
     await pet.auth(username, password)
     

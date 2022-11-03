@@ -1,6 +1,6 @@
 {
   "codeowners": ["@sh00t2kill"],
-  "config_flow": false,
+  "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/sh00t2kill/petoneer_revogi_py",
   "domain": "revogi",

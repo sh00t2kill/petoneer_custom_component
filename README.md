@@ -4,11 +4,5 @@
 
 Copy the `custom_components` directory to your HA instance
 
-Add the below to your `configuration.yaml` file
 
-```
-revogi:
-   username: <username>
-   password: <password>
-   serial: <serial number of fountain>
-```
+Click add integration in the Integrations section, and select `Revogi Petoneer Water Fountain`

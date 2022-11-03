@@ -7,7 +7,6 @@ import asyncio
 import hashlib
 import json
 import logging
-from pprint import pprint
 import urllib.parse
 
 import aiohttp

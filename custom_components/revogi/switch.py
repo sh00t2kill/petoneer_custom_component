@@ -6,25 +6,18 @@ import urllib.parse
 
 import aiohttp
 import async_timeout
+import homeassistant.helpers.config_validation as cv
+import voluptuous as vol
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
-import homeassistant.helpers.config_validation as cv
+
 from homeassistant.helpers.entity import *
-from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
-    DataUpdateCoordinator,
-)
-import voluptuous as vol
+from homeassistant.helpers.update_coordinator import (CoordinatorEntity, DataUpdateCoordinator)
 
 from .const import (
-    ATTR_LED,
-    ATTR_LEDMODE,
-    ATTR_LEVEL,
-    ATTR_SWITCH,
-    ATTR_TDS,
     CONF_SERIAL,
     DEFAULT_NAME,
     DOMAIN,

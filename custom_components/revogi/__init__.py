@@ -99,7 +99,3 @@ class PetoneerCoordinator(DataUpdateCoordinator):
             raise ConfigEntryAuthFailed from err
         except ApiError as err:
             raise UpdateFailed(f"Error communicating with API: {err}")
-
-
-
-

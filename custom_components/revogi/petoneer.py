@@ -131,4 +131,3 @@ class Petoneer:
 
         device_details = json_resp['data']
         return device_details
-

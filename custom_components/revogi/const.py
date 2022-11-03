@@ -8,5 +8,4 @@ ATTR_SWITCH = "switch"
 CONF_SERIAL = "serial"
 CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
-
 DEFAULT_NAME = "Petoneer Revogi"

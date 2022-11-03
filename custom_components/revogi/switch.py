@@ -14,8 +14,11 @@ import async_timeout
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import *
-from homeassistant.components.sensor import SensorEntity
-from homeassistant.const import ATTR_ATTRIBUTION
+from homeassistant.components.switch import SwitchEntity
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+)
 
 from .const import(
     DEFAULT_NAME,
@@ -28,47 +31,24 @@ from .const import(
     CONF_SERIAL,
 )
 
-from .petoneer import Petoneer
-
-
-CONFIG_SCHEMA = vol.Schema(
-    {
-        DOMAIN: vol.Schema(
-            {
-                vol.Required(CONF_USERNAME): cv.string,
-                vol.Required(CONF_PASSWORD): cv.string,
-                vol.Required(CONF_SERIAL): cv.string
-            }
-        )
-    }
-)
-
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
-    username = config.get(CONF_USERNAME)
-    password = config.get(CONF_PASSWORD)
-    serial = config.get(CONF_SERIAL)
+async def async_setup_platform(
+    hass, config, async_add_entities, discovery_info=None
+):
+    """Setup the switch platform."""
+    coordinator = hass.data[DOMAIN]["coordinator"]
+    async_add_entities([PetoneerSwitch(coordinator, hass)], True)
 
-    pet = Petoneer()
-    await pet.auth(username, password)
-    async_add_entities(
-        [
-            PetoneerSwitch(
-                pet,
-                serial
-            )
-        ]
-    ) 
+class PetoneerSwitch(CoordinatorEntity, SwitchEntity):
 
-class PetoneerSwitch(SensorEntity):
-
-    def __init__(self, pet, id):
-        #super().__init__()
-        self._pet = pet
+    def __init__(self, coordinator: DataUpdateCoordinator, hass):
+        super().__init__(coordinator)
         self._state = None
-        self._id = id
+        self._id = hass.data[DOMAIN]["conf"][CONF_SERIAL]#id
         self.entity_id = DOMAIN + "." + self._id
+        self.pet_api = coordinator.pet_api
+        self.coordinator = coordinator
 
     @property
     def unique_id(self):
@@ -85,26 +65,20 @@ class PetoneerSwitch(SensorEntity):
     def name(self):
         return f"Petoneer {self._id}"
 
-
-    async def async_update(self):
-        attributes = await self._pet.get_device_details(self._id)
-        _LOGGER.debug(f"Switch Attributes: {attributes}")
-
-        # set the switch state -- use the switch value for this
-        self._state = attributes['switch']
-
     async def async_turn_on(self, **kwargs):
         """Turn the entity on"""
-        attributes = await self._pet.turn_on(self._id)
-        self._state = 1
+        attributes = await self.pet_api.turn_on(self._id)
+        await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs):
         """Turn the entity off"""
-        attributes = await self._pet.turn_off(self._id)
-        self._state = 0
+        attributes = await self.pet_api.turn_off(self._id)
+        await self.coordinator.async_request_refresh()
 
     @property
     def state(self):
+        attributes = self.coordinator.data#.values()
+        self._state = attributes['switch']
         state = "off"
         if (self._state == 1):
             state = "on"

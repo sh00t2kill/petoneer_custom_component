@@ -37,6 +37,7 @@ class Petoneer:
         # Nothing to do here
         _LOGGER.debug("Petoneer Python API via the Dark Arts")
         _LOGGER.debug("====================================")
+        
     
     async def _debug(self, msg):
         #print(msg)
@@ -89,8 +90,8 @@ class Petoneer:
           "password": password
         }
         
-        _LOGGER.debug("Authenticating to " + self.API_URL + " as " + username + "...")
-
+        _LOGGER.debug("Authenticating to " + str(self.API_URL) + " as " + username + "...")
+        
         #
         # Attempt to authenticate - if successful, we will get an HTTP 200
         # response back which will include our authentication token that
@@ -122,13 +123,18 @@ class Petoneer:
         # Return the list of devices
         return devices
 
+    async def fetch_data(self, device_code):
+        return await self.get_device_details(device_code)
+
     async def get_device_details(self, device_code):
         _LOGGER.info("Getting details for device " + device_code)
         payload = { "sn": device_code, "protocol": "3" }
         resp = await self._req(self.API_DEVICE_DETAILS_PATH, payload)
         json_resp = resp#.json()
   
+        _LOGGER.debug(f"Device Response: {json_resp}")
         device_details = json_resp['data']
+        _LOGGER.debug(f"Returning {device_details}")
         return device_details
 
     async def turn_on(self, device_code):

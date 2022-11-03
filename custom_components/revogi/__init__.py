@@ -56,7 +56,7 @@ async def async_setup_entry(hass: core.HomeAssistant, entry: ConfigEntry)-> bool
     hass.async_create_task(async_load_platform(hass, "sensor", DOMAIN, {}, conf))
     _LOGGER.debug("Load Switch")
     hass.async_create_task(async_load_platform(hass, "switch", DOMAIN, {}, conf))
-
+    hass.async_create_task(async_load_platform(hass, "binary_sensor", DOMAIN, {}, conf))
     return True
 
 

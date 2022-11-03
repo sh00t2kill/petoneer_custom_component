@@ -1,5 +1,4 @@
 {
   "name": "Revogi Petoneer Water Fountain",
-  "render_readme": true,
-  "iot_class": "cloud_polling"
+  "render_readme": true
 }

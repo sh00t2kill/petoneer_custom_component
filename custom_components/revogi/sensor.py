@@ -15,22 +15,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 
 from homeassistant.helpers.entity import *
-from homeassistant.helpers.update_coordinator import (CoordinatorEntity, DataUpdateCoordinator)
+from homeassistant.helpers.update_coordinator import (CoordinatorEntity,
+                                                      DataUpdateCoordinator)
 
-
-from .const import (
-    ATTR_LED,
-    ATTR_LEDMODE,
-    ATTR_LEVEL,
-    ATTR_SWITCH,
-    ATTR_TDS,
-    ATTR_FILTERTIME,
-    ATTR_MOTORTIME,
-    ATTR_WATERTIME,
-    CONF_SERIAL,
-    DEFAULT_NAME,
-    DOMAIN,
-)
+from .const import *
 
 _LOGGER = logging.getLogger(__name__)
 

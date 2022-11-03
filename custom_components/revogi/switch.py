@@ -15,13 +15,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 
 from homeassistant.helpers.entity import *
-from homeassistant.helpers.update_coordinator import (CoordinatorEntity, DataUpdateCoordinator)
+from homeassistant.helpers.update_coordinator import (CoordinatorEntity,
+                                                      DataUpdateCoordinator)
 
-from .const import (
-    CONF_SERIAL,
-    DEFAULT_NAME,
-    DOMAIN,
-)
+from .const import (CONF_SERIAL, DEFAULT_NAME, DOMAIN)
 
 _LOGGER = logging.getLogger(__name__)
 

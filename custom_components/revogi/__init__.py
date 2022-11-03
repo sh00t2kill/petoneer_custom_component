@@ -20,8 +20,12 @@ import homeassistant.helpers.config_validation as cv
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 
 from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator 
+from homeassistant.helpers.update_coordinator import (
+    DataUpdateCoordinator,
+    UpdateFailed,
+)
 from homeassistant.helpers.discovery import async_load_platform
+from homeassistant.exceptions import ConfigEntryAuthFailed
 
 
 PLATFORMS = ['sensor', 'switch']
@@ -83,7 +87,6 @@ class PetoneerCoordinator(DataUpdateCoordinator):
             update_interval=timedelta(seconds=30),
         )
         self.pet_api = pet_api
-        #self.hass = hass
         self.serial = serial
 
     async def _async_update_data(self):
@@ -92,19 +95,18 @@ class PetoneerCoordinator(DataUpdateCoordinator):
         This is the place to pre-process the data to lookup tables
         so entities can quickly look up their data.
         """
-        async with async_timeout.timeout(10):
-            return await self.pet_api.fetch_data(self.serial)
-        #try:
+
+        try:
             # Note: asyncio.TimeoutError and aiohttp.ClientError are already
             # handled by the data update coordinator.
-        #    async with async_timeout.timeout(10):
-        #        return await self.pet_api.fetch_data(hass.data[DOMAIN]["conf"][CONF_SERIAL])
-        #except ApiAuthError as err:
+            async with async_timeout.timeout(10):
+                return await self.pet_api.fetch_data(self.serial)
+        except ApiAuthError as err:
             # Raising ConfigEntryAuthFailed will cancel future updates
             # and start a config flow with SOURCE_REAUTH (async_step_reauth)
-        #    raise ConfigEntryAuthFailed from err
-        #except ApiError as err:
-        #    raise UpdateFailed(f"Error communicating with API: {err}")
+            raise ConfigEntryAuthFailed from err
+        except ApiError as err:
+            raise UpdateFailed(f"Error communicating with API: {err}")
 
 
 

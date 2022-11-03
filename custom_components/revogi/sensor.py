@@ -1,11 +1,7 @@
-import asyncio
-import hashlib
-import json
-import logging
-import urllib.parse
-
 import aiohttp
 import async_timeout
+import asyncio
+import hashlib
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
@@ -17,6 +13,9 @@ from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
     DataUpdateCoordinator,
 )
+import json
+import logging
+import urllib.parse
 import voluptuous as vol
 
 from .const import (

@@ -30,22 +30,6 @@ from homeassistant.exceptions import ConfigEntryAuthFailed
 
 PLATFORMS = ['sensor', 'switch']
 
-""" CONFIG_SCHEMA = vol.Schema(
-    {
-        DOMAIN: vol.Schema(
-            {
-                vol.Required(CONF_USERNAME): cv.string,
-                vol.Required(CONF_PASSWORD): cv.string,
-                vol.Required(CONF_SERIAL): cv.string
-            }
-        )
-    },
-    # The full HA configurations gets passed to `async_setup` so we need to allow
-    # extra keys.
-    extra=vol.ALLOW_EXTRA,
-)
- """
-
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: core.HomeAssistant, entry: ConfigEntry)-> bool:

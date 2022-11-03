@@ -46,9 +46,9 @@ class RevogiFlowHandler(ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=vol.Schema(
                 {
-                    vol.Required(CONF_USERNAME, default=""): str,
-                    vol.Required(CONF_PASSWORD, default=""): str,
-                    vol.Required(CONF_SERIAL, default=""): str,
+                    vol.Required(CONF_USERNAME, default="Username"): str,
+                    vol.Required(CONF_PASSWORD, default="Password"): str,
+                    vol.Required(CONF_SERIAL, default="Fountain Serial"): str,
                 }
             ),
         )

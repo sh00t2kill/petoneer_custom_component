@@ -73,6 +73,6 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
             ATTR_SWITCH: attributes['switch']
         }
 
-        self._state = attributes['level']
+        self._state = attributes['level'] * 25
 
         return self._state

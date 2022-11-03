@@ -50,12 +50,12 @@ async def async_setup_entry(hass: core.HomeAssistant, entry: ConfigEntry)-> bool
 
     pet = Petoneer()
     await pet.auth(username, password)
-    
+
     coordinator = PetoneerCoordinator(hass, pet, serial)
 
     await coordinator.async_refresh()
     _LOGGER.debug("Coordinator has synced")
-    
+
     hass.data[DOMAIN] = {
         "conf": conf,
         "coordinator": coordinator,
@@ -64,11 +64,11 @@ async def async_setup_entry(hass: core.HomeAssistant, entry: ConfigEntry)-> bool
     _LOGGER.debug("Load Sensor")
     hass.async_create_task(async_load_platform(hass, "sensor", DOMAIN, {}, conf))
     _LOGGER.debug("Load Switch")
-    hass.async_create_task(async_load_platform(hass, "switch", DOMAIN, {}, conf)) 
+    hass.async_create_task(async_load_platform(hass, "switch", DOMAIN, {}, conf))
 
     return True
 
-    
+
 
 class PetoneerCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, pet_api, serial):

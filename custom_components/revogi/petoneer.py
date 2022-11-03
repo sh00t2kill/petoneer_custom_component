@@ -35,8 +35,8 @@ class Petoneer:
     def __init__(self):
         # Nothing to do here
         _LOGGER.debug("Petoneer Python API")
-      
-    
+
+
     async def _debug(self, msg):
         _LOGGER.debug(msg)
 
@@ -68,9 +68,9 @@ class Petoneer:
           "username": username,
           "password": password
         }
-        
+
         _LOGGER.debug("Authenticating to " + str(self.API_URL) + " as " + username + "...")
-        
+
         #
         # Attempt to authenticate - if successful, we will get an HTTP 200
         # response back which will include our authentication token that
@@ -110,7 +110,7 @@ class Petoneer:
         payload = { "sn": device_code, "protocol": "3" }
         resp = await self._req(self.API_DEVICE_DETAILS_PATH, payload)
         json_resp = resp
-  
+
         _LOGGER.debug(f"Device Response: {json_resp}")
         device_details = json_resp['data']
         _LOGGER.debug(f"Returning {device_details}")

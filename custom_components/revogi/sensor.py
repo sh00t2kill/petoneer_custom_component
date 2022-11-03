@@ -70,7 +70,7 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def state(self):
-        
+
         attributes = self.coordinator.data
         _LOGGER.debug(f"Sensor state: {attributes}")
         self._attrs = {

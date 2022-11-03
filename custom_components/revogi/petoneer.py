@@ -7,7 +7,6 @@ import logging
 from opcode import hasconst
 import urllib.parse
 
-#import requests
 import aiohttp
 import asyncio
 import json
@@ -35,12 +34,11 @@ class Petoneer:
 
     def __init__(self):
         # Nothing to do here
-        _LOGGER.debug("Petoneer Python API via the Dark Arts")
-        _LOGGER.debug("====================================")
+        _LOGGER.debug("Petoneer Python API")
+      
     
     async def _debug(self, msg):
-        #print(msg)
-        pass
+        _LOGGER.debug(msg)
 
     def _url(self, path):
         return self.API_URL + path
@@ -58,24 +56,6 @@ class Petoneer:
         await session.close()
         return response
 
-#    def _req(self, path, payload, auth=True):
-#        if (auth):
-#            headers = { "accessToken": self._auth_token }
-#        else:
-#            headers = {}
-
-        # Make the request
-        #if (self.hass):
-        #    await self.hass.async_add_executor_job(resp = requests.post(self._url(path), json=payload, headers=headers))
-        #else:
-        #    resp = requests.post(self._url(path), json=payload, headers=headers)
-        #resp = requests.post(self._url(path), json=payload, headers=headers)
-        #return resp
-
-
-    #def setHass(self, hass):
-    #    self.hass = hass
-
     async def auth(self, username, password):
         # Build the authentication request payload
         auth_payload = {
@@ -89,8 +69,8 @@ class Petoneer:
           "password": password
         }
         
-        _LOGGER.debug("Authenticating to " + self.API_URL + " as " + username + "...")
-
+        _LOGGER.debug("Authenticating to " + str(self.API_URL) + " as " + username + "...")
+        
         #
         # Attempt to authenticate - if successful, we will get an HTTP 200
         # response back which will include our authentication token that
@@ -98,7 +78,7 @@ class Petoneer:
         #
         resp = await self._req(self.API_LOGIN_PATH, auth_payload, auth=False)
         _LOGGER.debug(resp)
-        json_resp = resp#.json()
+        json_resp = resp
 
         # Verify we have an auth token in the response - if so, store it
         if (json_resp['data']['accessToken']):
@@ -115,26 +95,31 @@ class Petoneer:
           "protocol": "3"
         }
         resp = await  self._req(self.API_DEVICE_LIST_PATH, payload)
-        json_resp = resp#.json()
+        json_resp = resp
 
         devices =  json_resp['data']['dev']
 
         # Return the list of devices
         return devices
 
+    async def fetch_data(self, device_code):
+        return await self.get_device_details(device_code)
+
     async def get_device_details(self, device_code):
         _LOGGER.info("Getting details for device " + device_code)
         payload = { "sn": device_code, "protocol": "3" }
         resp = await self._req(self.API_DEVICE_DETAILS_PATH, payload)
-        json_resp = resp#.json()
+        json_resp = resp
   
+        _LOGGER.debug(f"Device Response: {json_resp}")
         device_details = json_resp['data']
+        _LOGGER.debug(f"Returning {device_details}")
         return device_details
 
     async def turn_on(self, device_code):
         payload = { "sn": device_code, "protocol": "3", "switch": 1 }
         resp = await self._req(self.API_DEVICE_SWITCH_PATH, payload)
-        json_resp = resp#.json()
+        json_resp = resp
 
         device_details = json_resp['data']
         return device_details
@@ -142,7 +127,7 @@ class Petoneer:
     async def turn_off(self, device_code):
         payload = { "sn": device_code, "protocol": "3", "switch": 0 }
         resp = await self._req(self.API_DEVICE_SWITCH_PATH, payload)
-        json_resp = resp#.json()
+        json_resp = resp
 
         device_details = json_resp['data']
         return device_details

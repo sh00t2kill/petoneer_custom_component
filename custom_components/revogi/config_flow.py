@@ -8,7 +8,6 @@ from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 
-
 from .const import CONF_SERIAL, DOMAIN
 
 

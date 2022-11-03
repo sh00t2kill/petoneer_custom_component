@@ -1,5 +1,4 @@
 import logging
-#from tkinter import SE
 import urllib.parse
 
 import aiohttp
@@ -72,7 +71,7 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
     @property
     def state(self):
         
-        attributes = self.coordinator.data#.values()
+        attributes = self.coordinator.data
         _LOGGER.debug(f"Sensor state: {attributes}")
         self._attrs = {
             ATTR_LEVEL: attributes['level'],

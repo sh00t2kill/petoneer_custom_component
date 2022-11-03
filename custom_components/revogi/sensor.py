@@ -25,6 +25,9 @@ from .const import (
     ATTR_LEVEL,
     ATTR_SWITCH,
     ATTR_TDS,
+    ATTR_FILTERTIME,
+    ATTR_MOTORTIME,
+    ATTR_WATERTIME,
     CONF_SERIAL,
     DEFAULT_NAME,
     DOMAIN,
@@ -77,6 +80,9 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
             ATTR_TDS: attributes['tds'],
             ATTR_LED: attributes['led'],
             ATTR_LEDMODE: attributes['ledmode'],
+            ATTR_FILTERTIME: attributes[ATTR_FILTERTIME],
+            ATTR_MOTORTIME: attributes[ATTR_MOTORTIME],
+            ATTR_WATERTIME: attributes[ATTR_WATERTIME],
             ATTR_SWITCH: attributes['switch']
         }
 

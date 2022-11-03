@@ -1,32 +1,22 @@
 """Petoneer Custom Component"""
 
-from h11 import Data
-from .const import(
-    DOMAIN,
-    CONF_SERIAL,
-)
-
-from .petoneer import Petoneer
-
-import logging
-from datetime import timedelta
-import async_timeout
 import asyncio
+from datetime import timedelta
+import logging
 
+import async_timeout
+from h11 import Data
 from homeassistant import core
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
-import voluptuous as vol
-import homeassistant.helpers.config_validation as cv
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
-
-from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers.update_coordinator import (
-    DataUpdateCoordinator,
-    UpdateFailed,
-)
+from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
+from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
+import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.discovery import async_load_platform
-from homeassistant.exceptions import ConfigEntryAuthFailed
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+import voluptuous as vol
 
+from .const import CONF_SERIAL, DOMAIN
+from .petoneer import Petoneer
 
 PLATFORMS = ['sensor', 'switch']
 
@@ -50,12 +40,12 @@ async def async_setup_entry(hass: core.HomeAssistant, entry: ConfigEntry)-> bool
 
     pet = Petoneer()
     await pet.auth(username, password)
-    
+
     coordinator = PetoneerCoordinator(hass, pet, serial)
 
     await coordinator.async_refresh()
     _LOGGER.debug("Coordinator has synced")
-    
+
     hass.data[DOMAIN] = {
         "conf": conf,
         "coordinator": coordinator,
@@ -64,11 +54,11 @@ async def async_setup_entry(hass: core.HomeAssistant, entry: ConfigEntry)-> bool
     _LOGGER.debug("Load Sensor")
     hass.async_create_task(async_load_platform(hass, "sensor", DOMAIN, {}, conf))
     _LOGGER.debug("Load Switch")
-    hass.async_create_task(async_load_platform(hass, "switch", DOMAIN, {}, conf)) 
+    hass.async_create_task(async_load_platform(hass, "switch", DOMAIN, {}, conf))
 
     return True
 
-    
+
 
 class PetoneerCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, pet_api, serial):
@@ -99,7 +89,3 @@ class PetoneerCoordinator(DataUpdateCoordinator):
             raise ConfigEntryAuthFailed from err
         except ApiError as err:
             raise UpdateFailed(f"Error communicating with API: {err}")
-
-
-
-

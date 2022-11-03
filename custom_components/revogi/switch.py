@@ -1,34 +1,33 @@
+import asyncio
+import hashlib
+import json
 import logging
 import urllib.parse
 
 import aiohttp
-import asyncio
-import json
-import hashlib
-
-from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
-import voluptuous as vol
-import homeassistant.helpers.config_validation as cv
-from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 import async_timeout
-from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity import *
 from homeassistant.components.switch import SwitchEntity
+from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
+from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
+from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryNotReady
+import homeassistant.helpers.config_validation as cv
+from homeassistant.helpers.entity import *
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
     DataUpdateCoordinator,
 )
+import voluptuous as vol
 
-from .const import(
-    DEFAULT_NAME,
-    DOMAIN,
-    ATTR_LEVEL,
-    ATTR_TDS ,
+from .const import (
     ATTR_LED,
     ATTR_LEDMODE,
+    ATTR_LEVEL,
     ATTR_SWITCH,
+    ATTR_TDS,
     CONF_SERIAL,
+    DEFAULT_NAME,
+    DOMAIN,
 )
 
 _LOGGER = logging.getLogger(__name__)

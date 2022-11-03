@@ -51,7 +51,6 @@ class PetoneerSensor(CoordinatorEntity, BinarySensorEntity):
     def name(self):
         return f"Petoneer Consumables Alert {self._id}"
 
-
     @property
     def state(self):
         attributes = self.coordinator.data

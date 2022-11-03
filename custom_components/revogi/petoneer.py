@@ -3,16 +3,15 @@ Python module to get device details from Petoneer / Revogi equipment
 Tested with a Petoneer Fresco Pro water fountain
 """
 
+import asyncio
+import hashlib
+import json
 import logging
-from opcode import hasconst
+from pprint import pprint
 import urllib.parse
 
 import aiohttp
-import asyncio
-import json
-import hashlib
-from pprint import pprint
-
+from opcode import hasconst
 
 REQUIREMENTS = ["aiohttp"]
 

@@ -69,6 +69,7 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
             ATTR_FILTERTIME: attributes[ATTR_FILTERTIME],
             ATTR_MOTORTIME: attributes[ATTR_MOTORTIME],
             ATTR_WATERTIME: attributes[ATTR_WATERTIME],
+            ATTR_ALARM: attributes['ledmode'] == 0,
             ATTR_SWITCH: attributes['switch']
         }
 

@@ -1,8 +1,10 @@
 """Petoneer Custom Component"""
 
-import async_timeout
 import asyncio
 from datetime import timedelta
+import logging
+
+import async_timeout
 from h11 import Data
 from homeassistant import core
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
@@ -11,7 +13,6 @@ from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.discovery import async_load_platform
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-import logging
 import voluptuous as vol
 
 from .const import CONF_SERIAL, DOMAIN

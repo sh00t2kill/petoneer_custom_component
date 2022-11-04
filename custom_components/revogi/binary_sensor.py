@@ -32,9 +32,6 @@ async def async_setup_platform(
     binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_FILTERTIME, WATER_DURATION, "Water"))
     binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_MOTORTIME, MOTOR_TIME, "Motor"))
     async_add_entities(binary_sensors, True)
-    #async_add_entities([PetoneerBinarySensor(coordinator, hass, ATTR_FILTERTIME, FILTER_DURATION, "Filter")], True)
-    #async_add_entities([PetoneerBinarySensor(coordinator, hass, ATTR_WATERTIME, WATER_DURATION, "Water")], True)
-    #async_add_entities([PetoneerBinarySensor(coordinator, hass, ATTR_MOTORTIME, MOTOR_TIME, "Motor")], True)
 
 class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
 

@@ -27,45 +27,36 @@ async def async_setup_platform(
 ):
     """Setup the sensor platform."""
     coordinator = hass.data[DOMAIN]["coordinator"]
-    async_add_entities([PetoneerSensor(coordinator, hass)], True)
+    async_add_entities([PetoneerBinarySensor(coordinator, hass, ATTR_FILTERTIME, FILTER_DURATION, "Filter")], True)
+    async_add_entities([PetoneerBinarySensor(coordinator, hass, ATTR_WATERTIME, WATER_DURATION, "Water")], True)
+    async_add_entities([PetoneerBinarySensor(coordinator, hass, ATTR_MOTORTIME, MOTOR_TIME, "Motor")], True)
 
-class PetoneerSensor(CoordinatorEntity, BinarySensorEntity):
+class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
 
-    def __init__(self, coordinator: DataUpdateCoordinator, hass):
+    def __init__(self, coordinator: DataUpdateCoordinator, hass, time, days, name):
         super().__init__(coordinator)
         self._state = None
         self._id = hass.data[DOMAIN]["conf"][CONF_SERIAL]
-        self.entity_id = DOMAIN + "." + self._id
-
-    @property
-    def unique_id(self):
-        """Return the unique ID of the sensor."""
-        return self._id
+        self._time = time
+        self._duration = days
+        self._name = name
 
     def device_info(self):
         return {
-            "name": DEFAULT_NAME,
+            "name": f"{DEFAULT_NAME} {self._name}",
             "serial": self._id
         }
 
     @property
     def name(self):
-        return f"Petoneer Consumables Alert {self._id}"
+        return f"Petoneer {self._name} Alert {self._id}"
 
     @property
     def state(self):
         attributes = self.coordinator.data
         _LOGGER.debug(f"Binary Sensor state: {attributes}")
-
-        filterdue = self.is_due(FILTER_DURATION, attributes[ATTR_FILTERTIME])
-        motordue = self.is_due(MOTOR_TIME, attributes[ATTR_MOTORTIME])
-        waterdue = self.is_due(WATER_DURATION, attributes[ATTR_WATERTIME])
-
-        _LOGGER.debug(f"Filter due: {filterdue}")
-        _LOGGER.debug(f"Motor due: {motordue}")
-        _LOGGER.debug(f"Water due: {waterdue}")
-
-        self._state = "off" if (filterdue or motordue or waterdue) else "off"
+        due = self.is_due(self._duration, attributes[self._time])
+        self._state = "on" if due  else "off"
         return self._state
 
     def is_due(self, days, time):

@@ -55,5 +55,5 @@ class PetoneerSensor(CoordinatorEntity, BinarySensorEntity):
     def state(self):
         attributes = self.coordinator.data
         _LOGGER.debug(f"Binary Sensor state: {attributes}")
-        self._state = attributes['ledmode'] == 0
+        self._state = "on" if attributes['ledmode'] == 0 else "off"
         return self._state

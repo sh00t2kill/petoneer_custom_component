@@ -3,6 +3,7 @@ import hashlib
 import json
 import logging
 import urllib.parse
+from datetime import datetime, timedelta
 
 import aiohttp
 import async_timeout
@@ -55,5 +56,19 @@ class PetoneerSensor(CoordinatorEntity, BinarySensorEntity):
     def state(self):
         attributes = self.coordinator.data
         _LOGGER.debug(f"Binary Sensor state: {attributes}")
-        self._state = "on" if attributes['ledmode'] == 0 else "off"
+
+        filterdue = self.is_due(FILTER_DURATION, attributes[ATTR_FILTERTIME])
+        motordue = self.is_due(MOTOR_TIME, attributes[ATTR_MOTORTIME])
+        waterdue = self.is_due(WATER_DURATION, attributes[ATTR_WATERTIME])
+
+        _LOGGER.debug(f"Filter due: {filterdue}")
+        _LOGGER.debug(f"Motor due: {motordue}")
+        _LOGGER.debug(f"Water due: {waterdue}")
+
+        self._state = "off" if (filterdue or motordue or waterdue) else "off"
         return self._state
+
+    def is_due(self, days, time):
+        due = datetime.now() + timedelta(days)
+        delta = due - datetime.fromtimestamp(time)
+        return delta.days < 0

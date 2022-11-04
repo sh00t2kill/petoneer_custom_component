@@ -27,9 +27,11 @@ async def async_setup_platform(
 ):
     """Setup the sensor platform."""
     coordinator = hass.data[DOMAIN]["coordinator"]
-    async_add_entities([PetoneerBinarySensor(coordinator, hass, ATTR_FILTERTIME, FILTER_DURATION, "Filter")], True)
-    async_add_entities([PetoneerBinarySensor(coordinator, hass, ATTR_WATERTIME, WATER_DURATION, "Water")], True)
-    async_add_entities([PetoneerBinarySensor(coordinator, hass, ATTR_MOTORTIME, MOTOR_TIME, "Motor")], True)
+    binary_sensors = []
+    binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_FILTERTIME, FILTER_DURATION, "Filter"))
+    binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_FILTERTIME, WATER_DURATION, "Water"))
+    binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_MOTORTIME, MOTOR_TIME, "Motor"))
+    async_add_entities(binary_sensors, True)
 
 class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
 
@@ -40,6 +42,7 @@ class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
         self._time = time
         self._duration = days
         self._name = name
+        self._attrs = {}
 
     def device_info(self):
         return {
@@ -48,13 +51,21 @@ class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
         }
 
     @property
+    def extra_state_attributes(self):
+        return self._attrs
+
+    @property
     def name(self):
         return f"Petoneer {self._name} Alert {self._id}"
 
     @property
     def state(self):
         attributes = self.coordinator.data
-        _LOGGER.debug(f"Binary Sensor state: {attributes}")
+        _LOGGER.debug(f"Binary Sensor {self._name} state: {attributes}")
+        self._attrs = {
+            self._time: datetime.fromtimestamp(attributes[self._time]),
+            "service_days": self._duration
+        }
         due = self.is_due(self._duration, attributes[self._time])
         self._state = "on" if due  else "off"
         return self._state

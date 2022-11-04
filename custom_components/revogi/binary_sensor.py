@@ -55,14 +55,11 @@ class PetoneerSensor(CoordinatorEntity, BinarySensorEntity):
     @property
     def state(self):
         attributes = self.coordinator.data
-        filtertime = attributes[ATTR_FILTERTIME]
-        motortime =  attributes[ATTR_MOTORTIME]
-        watertime =  attributes[ATTR_WATERTIME]
         _LOGGER.debug(f"Binary Sensor state: {attributes}")
 
-        filterdue = self.is_due(FILTER_DURATION, filtertime)
-        motordue = self.is_due(MOTOR_TIME, motortime)
-        waterdue = self.is_due(WATER_DURATION, watertime)
+        filterdue = self.is_due(FILTER_DURATION, attributes[ATTR_FILTERTIME])
+        motordue = self.is_due(MOTOR_TIME, attributes[ATTR_MOTORTIME])
+        waterdue = self.is_due(WATER_DURATION, attributes[ATTR_WATERTIME])
 
         _LOGGER.debug(f"Filter due: {filterdue}")
         _LOGGER.debug(f"Motor due: {motordue}")

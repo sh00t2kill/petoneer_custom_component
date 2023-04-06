@@ -8,9 +8,9 @@ The integration adds a single sensor, with an overall state of the water percent
 Important Note: This is for fountains that use the Fresco Pro app, not the Tuya Cloud based Petoneer app.
 
 There are 3 things required for configuration<br>
-username: the email address used to sign in to the Fresco Pro app
-password: the password for the Fresco Pro app
-serial: the serial number for the fountain. It can be found by opening the device in the Fresco Pro app, Setting -> About
+<b>username:</b> the email address used to sign in to the Fresco Pro app<br>
+<b>password:</b> the password for the Fresco Pro app<br>
+<b>serial:</b> the serial number for the fountain. It can be found by opening the device in the Fresco Pro app, Setting -> About
 
 ##TODO
 

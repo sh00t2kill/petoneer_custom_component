@@ -110,8 +110,11 @@ class Petoneer:
         json_resp = resp
 
         _LOGGER.debug(f"Device Response: {json_resp}")
-        device_details = json_resp['data']
-        _LOGGER.debug(f"Returning {device_details}")
+        if "data" in json_resp:
+            device_details = json_resp['data']
+            _LOGGER.debug(f"Returning {device_details}")
+        else:
+            device_details = False
         return device_details
 
     async def turn_on(self, device_code):

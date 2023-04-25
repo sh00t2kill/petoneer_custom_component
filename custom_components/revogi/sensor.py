@@ -61,18 +61,21 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
 
         attributes = self.coordinator.data
         _LOGGER.debug(f"Sensor state: {attributes}")
-        self._attrs = {
-            ATTR_LEVEL: attributes['level'],
-            ATTR_TDS: attributes['tds'],
-            ATTR_LED: attributes['led'],
-            ATTR_LEDMODE: attributes['ledmode'],
-            ATTR_FILTERTIME: attributes[ATTR_FILTERTIME],
-            ATTR_MOTORTIME: attributes[ATTR_MOTORTIME],
-            ATTR_WATERTIME: attributes[ATTR_WATERTIME],
-            ATTR_ALARM: attributes['ledmode'] == 0,
-            ATTR_SWITCH: attributes['switch']
-        }
 
-        self._state = attributes['level'] * 25
+        if not attributes:
+            self._state = "unknown"
+        else:
+            self._attrs = {
+                ATTR_LEVEL: attributes['level'],
+                ATTR_TDS: attributes['tds'],
+                ATTR_LED: attributes['led'],
+                ATTR_LEDMODE: attributes['ledmode'],
+                ATTR_FILTERTIME: attributes[ATTR_FILTERTIME],
+                ATTR_MOTORTIME: attributes[ATTR_MOTORTIME],
+                ATTR_WATERTIME: attributes[ATTR_WATERTIME],
+                ATTR_ALARM: attributes['ledmode'] == 0,
+                ATTR_SWITCH: attributes['switch']
+            }
+            self._state = attributes['level'] * 25
 
         return self._state

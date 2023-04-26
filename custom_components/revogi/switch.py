@@ -70,10 +70,15 @@ class PetoneerSwitch(CoordinatorEntity, SwitchEntity):
         if attributes:
            self._state = attributes['switch']
            state = "off"
+        else:
+            self._state = "unknown"
         if (self._state == 1):
             state = "on"
         return state
 
     @property
     def is_on(self):
-        return self._state == 1
+        state = "unknown"
+        if self._state != "unknown":
+            state = self._state == 1
+        return state

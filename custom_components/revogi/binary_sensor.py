@@ -62,12 +62,14 @@ class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
     def state(self):
         attributes = self.coordinator.data
         _LOGGER.debug(f"Binary Sensor {self._name} state: {attributes}")
-        self._attrs = {
-            self._time: datetime.fromtimestamp(attributes[self._time]),
-            "service_days": self._duration
-        }
-        due = self.is_due(self._duration, attributes[self._time])
-        self._state = "on" if due  else "off"
+        self._state = "unknown"
+        if attributes:
+            self._attrs = {
+                self._time: datetime.fromtimestamp(attributes[self._time]),
+                "service_days": self._duration
+            }
+            due = self.is_due(self._duration, attributes[self._time])
+            self._state = "on" if due  else "off"
         return self._state
 
     def is_due(self, days, time):

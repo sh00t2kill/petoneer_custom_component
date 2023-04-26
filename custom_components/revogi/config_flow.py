@@ -12,7 +12,7 @@ from .const import CONF_SERIAL, DOMAIN
 
 
 class RevogiFlowHandler(ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Solcast Solar."""
+    """Handle a config flow for Revogi."""
 
     VERSION = 2
 

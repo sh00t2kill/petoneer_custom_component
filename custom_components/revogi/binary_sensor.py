@@ -17,12 +17,13 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.entity import *
 from homeassistant.helpers.update_coordinator import (CoordinatorEntity,
                                                       DataUpdateCoordinator)
+from homeassistant.util import slugify
 
 from .const import *
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_platform(
+async def async_setup_entry(
     hass, config, async_add_entities, discovery_info=None
 ):
     """Setup the sensor platform."""
@@ -43,12 +44,16 @@ class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
         self._duration = days
         self._name = name
         self._attrs = {}
+        self._attr_device_info = coordinator.get_device()
+        self._attr_unique_id = slugify(f"{DOMAIN}_{self._id}_{name}")
 
+    @property
     def device_info(self):
-        return {
-            "name": f"{DEFAULT_NAME} {self._name}",
-            "serial": self._id
-        }
+        return self._attr_device_info
+
+    @property
+    def unique_id(self):
+        return self._attr_unique_id
 
     @property
     def extra_state_attributes(self):

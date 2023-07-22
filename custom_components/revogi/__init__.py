@@ -13,13 +13,14 @@ from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers.discovery import async_load_platform
+from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.update_coordinator import (DataUpdateCoordinator,
                                                       UpdateFailed)
 
 from .const import CONF_SERIAL, DOMAIN
 from .petoneer import Petoneer
 
-PLATFORMS = ['sensor', 'switch']
+PLATFORMS = ['sensor', 'switch', 'binary_sensor']
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -44,7 +45,7 @@ async def async_setup_entry(hass: core.HomeAssistant, entry: ConfigEntry)-> bool
 
     coordinator = PetoneerCoordinator(hass, pet, serial)
 
-    await coordinator.async_refresh()
+    await coordinator.async_config_entry_first_refresh()
     _LOGGER.debug("Coordinator has synced")
 
     hass.data[DOMAIN] = {
@@ -52,14 +53,16 @@ async def async_setup_entry(hass: core.HomeAssistant, entry: ConfigEntry)-> bool
         "coordinator": coordinator,
     }
 
-    _LOGGER.debug("Load Sensor")
-    hass.async_create_task(async_load_platform(hass, "sensor", DOMAIN, {}, conf))
-    _LOGGER.debug("Load Switch")
-    hass.async_create_task(async_load_platform(hass, "switch", DOMAIN, {}, conf))
-    hass.async_create_task(async_load_platform(hass, "binary_sensor", DOMAIN, {}, conf))
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
     return True
 
-
+async def async_unload_entry(hass: core.HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload a component config entry."""
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    if unload_ok:
+        hass.data[DOMAIN].pop(entry.entry_id)
+    return unload_ok
 
 class PetoneerCoordinator(DataUpdateCoordinator):
     def __init__(self, hass, pet_api, serial):
@@ -90,3 +93,13 @@ class PetoneerCoordinator(DataUpdateCoordinator):
             raise ConfigEntryAuthFailed from err
         except ApiError as err:
             raise UpdateFailed(f"Error communicating with API: {err}")
+
+    def get_device(self):
+        return DeviceInfo(
+            identifiers={
+                (DOMAIN, self.serial)
+            },
+            name=f"Water Fountain {self.serial}",
+            manufacturer="Petoneer",
+            model="Fresco Pro",
+        )

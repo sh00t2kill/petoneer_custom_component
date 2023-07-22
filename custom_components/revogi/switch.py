@@ -21,7 +21,7 @@ from .const import CONF_SERIAL, DEFAULT_NAME, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_platform(
+async def async_setup_entry(
     hass, config, async_add_entities, discovery_info=None
 ):
     """Setup the switch platform."""
@@ -37,18 +37,16 @@ class PetoneerSwitch(CoordinatorEntity, SwitchEntity):
         self.entity_id = DOMAIN + "." + self._id
         self.pet_api = coordinator.pet_api
         self.coordinator = coordinator
+        self._attr_device_info = coordinator.get_device()
 
     @property
     def unique_id(self):
         """Return the unique ID of the sensor."""
         return self._id
 
+    @property
     def device_info(self):
-        return {
-            "name": DEFAULT_NAME,
-            "serial": self._id
-        }
-
+        return self._attr_device_info
     @property
     def name(self):
         return f"Petoneer {self._id}"

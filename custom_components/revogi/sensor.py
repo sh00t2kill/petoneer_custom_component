@@ -21,7 +21,7 @@ from .const import *
 
 _LOGGER = logging.getLogger(__name__)
 
-async def async_setup_platform(
+async def async_setup_entry(
     hass, config, async_add_entities, discovery_info=None
 ):
     """Setup the sensor platform."""
@@ -35,6 +35,7 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
         self._state = None
         self._id = hass.data[DOMAIN]["conf"][CONF_SERIAL]
         self.entity_id = DOMAIN + "." + self._id
+        self._attr_device_info = coordinator.get_device()
         self._attrs = {}
 
     @property
@@ -42,11 +43,9 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
         """Return the unique ID of the sensor."""
         return self._id
 
+    @property
     def device_info(self):
-        return {
-            "name": DEFAULT_NAME,
-            "serial": self._id
-        }
+        return self._attr_device_info
 
     @property
     def name(self):

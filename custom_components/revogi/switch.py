@@ -33,6 +33,7 @@ async def async_setup_entry(
     platform.async_register_entity_service("reset_water", {}, "_reset_water")
     platform.async_register_entity_service("reset_motor", {}, "_reset_motor")
     platform.async_register_entity_service("reset_filter", {}, "_reset_filter")
+    platform.async_register_entity_service("reset_all", {}, "_reset_all")
 
 class PetoneerSwitch(CoordinatorEntity, SwitchEntity):
 
@@ -78,6 +79,13 @@ class PetoneerSwitch(CoordinatorEntity, SwitchEntity):
     async def _reset_filter(self):
         await self.pet_api.set_filter_changed(self._id)
         await self.coordinator.async_request_refresh()
+
+    async def _reset_all(self):
+        await self.pet_api.set_water_changed(self._id)
+        await self.pet_api.set_motor_changed(self._id)
+        await self.pet_api.set_filter_changed(self._id)
+        await self.coordinator.async_request_refresh()
+
 
     @property
     def state(self):

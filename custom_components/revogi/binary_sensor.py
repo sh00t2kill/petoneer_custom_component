@@ -79,7 +79,9 @@ class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
 
     def is_due(self, days, time):
         due = datetime.now() + timedelta(days)
+        present = datetime.now()
         _LOGGER.debug(f"Binary Sensor {self._name} due at {due}")
-        delta = due - datetime.fromtimestamp(time)
+        expire_time = datetime.fromtimestamp(time)
+        delta = due - expire_time
         _LOGGER.debug(f"Delta: {delta.days} days")
-        return delta.days < 1
+        return delta.days < 1 or expire_time < present

@@ -1,4 +1,3 @@
-Add this custom repository to HACS
 Download the `Revogi Petoneer Water Fountain` integration in HACS
 
 Click add integration in the Integrations section, and select `Revogi Petoneer Water Fountain`
@@ -12,6 +11,10 @@ There are 3 things required for configuration<br>
 <b>password:</b> the password for the Fresco Pro app<br>
 <b>serial:</b> the serial number for the fountain. It can be found by opening the device in the Fresco Pro app, Setting -> About
 
-##TODO
+There are 4 services to reset the consumables:<br>
+revogi.reset_water<br>
+revogi.reset_filter<br>
+revogi.reset_motor<br>
+revogi.reset_all<br>
 
-Add a way to reset the consumables
+These take an entity_id of the switch created by the integration.

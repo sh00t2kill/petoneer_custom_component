@@ -27,6 +27,10 @@ class Petoneer:
     API_DEVICE_LIST_PATH    = "/user/500"
     API_DEVICE_DETAILS_PATH = "/pww/31101"
     API_DEVICE_SWITCH_PATH  = "/pww/21101"
+    API_CLEAN_MOTOR_PATH    = "/pww/21103"
+    API_CLEAN_FILTER_PATH   = "/pww/21105"
+    API_CLEAN_WATER_PATH    = "/pww/21107"
+
     Debug                   = 0
     hass             = False
 
@@ -132,3 +136,15 @@ class Petoneer:
 
         device_details = json_resp['data']
         return device_details
+
+    async def set_filter_changed(self, device_code):
+        payload = { "sn": device_code, "protocol": "3" }
+        await self._req(self.API_CLEAN_FILTER_PATH, payload)
+
+    async def set_motor_changed(self, device_code):
+        payload = { "sn": device_code, "protocol": "3" }
+        await self._req(self.API_CLEAN_MOTOR_PATH, payload)
+
+    async def set_water_changed(self, device_code):
+        payload = { "sn": device_code, "protocol": "3" }
+        await self._req(self.API_CLEAN_WATER_PATH, payload)

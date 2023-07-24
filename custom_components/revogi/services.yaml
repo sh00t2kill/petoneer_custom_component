@@ -1,0 +1,32 @@
+#Service ID
+reset_water:
+  name: Reset Water
+  description: Reset the time the water was last changed
+  target:
+    entity:
+      integration: revogi
+      domain: switch
+
+reset_motor:
+  name: Reset Motor
+  description: Reset the time the motor was last changed
+  target:
+    entity:
+      integration: revogi
+      domain: switch
+
+reset_filter:
+  name: Reset Filter
+  description: Reset the time the filter was last changed
+  target:
+    entity:
+      integration: revogi
+      domain: switch
+
+reset_all:
+  name: Reset All
+  description: Reset the time for all consumable changes
+  target:
+    entity:
+      integration: revogi
+      domain: switch

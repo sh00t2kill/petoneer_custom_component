@@ -13,6 +13,7 @@ from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 from homeassistant.const import CONF_PASSWORD, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers import entity_platform, service
 from homeassistant.helpers.entity import *
 from homeassistant.helpers.update_coordinator import (CoordinatorEntity,
                                                       DataUpdateCoordinator)
@@ -27,6 +28,11 @@ async def async_setup_entry(
     """Setup the switch platform."""
     coordinator = hass.data[DOMAIN]["coordinator"]
     async_add_entities([PetoneerSwitch(coordinator, hass)], True)
+
+    platform = entity_platform.async_get_current_platform()
+    platform.async_register_entity_service("reset_water", {}, "_reset_water")
+    platform.async_register_entity_service("reset_motor", {}, "_reset_motor")
+    platform.async_register_entity_service("reset_filter", {}, "_reset_filter")
 
 class PetoneerSwitch(CoordinatorEntity, SwitchEntity):
 
@@ -59,6 +65,18 @@ class PetoneerSwitch(CoordinatorEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs):
         """Turn the entity off"""
         attributes = await self.pet_api.turn_off(self._id)
+        await self.coordinator.async_request_refresh()
+
+    async def _reset_water(self):
+        await self.pet_api.set_water_changed(self._id)
+        await self.coordinator.async_request_refresh()
+
+    async def _reset_motor(self):
+        await self.pet_api.set_motor_changed(self._id)
+        await self.coordinator.async_request_refresh()
+
+    async def _reset_filter(self):
+        await self.pet_api.set_filter_changed(self._id)
         await self.coordinator.async_request_refresh()
 
     @property

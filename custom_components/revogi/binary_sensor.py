@@ -81,7 +81,5 @@ class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
         due = datetime.now() + timedelta(days)
         _LOGGER.debug(f"Binary Sensor {self._name} due at {due}")
         delta = due - datetime.fromtimestamp(time)
-        _LOGGER.debug(f"Delta: {delta}")
-        _LOGGER.debug(delta.days)
-        _LOGGER.debug(delta.days < 1)
+        _LOGGER.debug(f"Delta: {delta.days} days")
         return delta.days < 1

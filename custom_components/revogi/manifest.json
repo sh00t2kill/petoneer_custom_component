@@ -1,11 +1,11 @@
 {
+  "domain": "revogi",
+  "name": "Revogi Petoneer Water Fountain",
   "codeowners": ["@sh00t2kill"],
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/sh00t2kill/petoneer_custom_component",
   "issue_tracker": "https://github.com/sh00t2kill/petoneer_custom_component/issues",
-  "domain": "revogi",
-  "name": "Revogi Petoneer Water Fountain",
   "requirements": [],
   "version": "0.0.1",
   "iot_class": "cloud_push"

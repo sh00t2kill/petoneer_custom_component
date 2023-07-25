@@ -45,6 +45,7 @@ class PetoneerSwitch(CoordinatorEntity, SwitchEntity):
         self.pet_api = coordinator.pet_api
         self.coordinator = coordinator
         self._attr_device_info = coordinator.get_device()
+        self._attr_icon = "mdi:water-pump"
 
     @property
     def unique_id(self):

@@ -29,14 +29,14 @@ async def async_setup_entry(
     """Setup the sensor platform."""
     coordinator = hass.data[DOMAIN]["coordinator"]
     binary_sensors = []
-    binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_FILTERTIME, FILTER_DURATION, "Filter"))
-    binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_FILTERTIME, WATER_DURATION, "Water"))
-    binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_MOTORTIME, MOTOR_TIME, "Motor"))
+    binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_FILTERTIME, FILTER_DURATION, "Filter", "mdi:filter-check"))
+    binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_FILTERTIME, WATER_DURATION, "Water", "mdi:water-check"))
+    binary_sensors.append(PetoneerBinarySensor(coordinator, hass, ATTR_MOTORTIME, MOTOR_TIME, "Motor", "mdi:engine"))
     async_add_entities(binary_sensors, True)
 
 class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
 
-    def __init__(self, coordinator: DataUpdateCoordinator, hass, time, days, name):
+    def __init__(self, coordinator: DataUpdateCoordinator, hass, time, days, name, icon):
         super().__init__(coordinator)
         self._state = None
         self._id = hass.data[DOMAIN]["conf"][CONF_SERIAL]
@@ -44,6 +44,7 @@ class PetoneerBinarySensor(CoordinatorEntity, BinarySensorEntity):
         self._duration = days
         self._name = name
         self._attrs = {}
+        self._attr_icon = icon
         self._attr_device_info = coordinator.get_device()
         self._attr_unique_id = slugify(f"{DOMAIN}_{self._id}_{name}")
 

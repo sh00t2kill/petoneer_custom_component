@@ -36,6 +36,7 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
         self._id = hass.data[DOMAIN]["conf"][CONF_SERIAL]
         self.entity_id = DOMAIN + "." + self._id
         self._attr_device_info = coordinator.get_device()
+        self._attr_icon = "mdi:water-percent"
         self._attrs = {}
 
     @property

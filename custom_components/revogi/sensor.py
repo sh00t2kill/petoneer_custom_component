@@ -27,22 +27,38 @@ async def async_setup_entry(
     """Setup the sensor platform."""
     coordinator = hass.data[DOMAIN]["coordinator"]
     async_add_entities([PetoneerSensor(coordinator, hass)], True)
+    async_add_entities([PetoneerSensor(coordinator=coordinator, hass=hass, name="TDS", data_attribute="tds", icon="mdi:water", unit_of_measurement="tds")], True)
 
 class PetoneerSensor(CoordinatorEntity, SensorEntity):
 
-    def __init__(self, coordinator: DataUpdateCoordinator, hass):
+    def __init__(self, coordinator: DataUpdateCoordinator, hass, name=None, data_attribute=None, icon="mdi:water-percent", unit_of_measurement="%"):
         super().__init__(coordinator)
         self._state = None
         self._id = hass.data[DOMAIN]["conf"][CONF_SERIAL]
-        self.entity_id = DOMAIN + "." + self._id
+        self._name = name
+        if name is None:
+            self.entity_id = DOMAIN + "." + self._id
+        else:
+            self.entity_id = DOMAIN + "." + self._id + "_" + name.replace(" ", "_").lower()
         self._attr_device_info = coordinator.get_device()
-        self._attr_icon = "mdi:water-percent"
+        self._attr_icon = icon
+        self.data_attribute = data_attribute
+        self._attr_icon = icon
+        self._unit_of_measurement = unit_of_measurement
         self._attrs = {}
+
+    @property
+    def unit_of_measurement(self):
+        return self._unit_of_measurement
 
     @property
     def unique_id(self):
         """Return the unique ID of the sensor."""
-        return self._id
+        if self._name is None:
+            unique_id = self._id
+        else:
+            unique_id = self._id + "_" + self._name.replace(" ", "_").lower()
+        return unique_id
 
     @property
     def device_info(self):
@@ -50,7 +66,10 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
 
     @property
     def name(self):
-        return f"Petoneer {self._id}"
+        if self._name is None:
+            return f"Petoneer {self._id}"
+        else:
+            return f"Petoneer {self._id} {self._name}"
 
     @property
     def extra_state_attributes(self):
@@ -76,6 +95,9 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
                 ATTR_ALARM: attributes['ledmode'] == 0,
                 ATTR_SWITCH: attributes['switch']
             }
-            self._state = attributes['level'] * 25
-
+            if self.data_attribute is None:
+                self._state = attributes['level'] * 25
+            else:
+                _LOGGER.debug(f"Using attribute: {self.data_attribute}")
+                self._state = attributes[self.data_attribute]
         return self._state

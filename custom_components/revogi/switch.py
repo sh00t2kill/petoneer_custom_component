@@ -41,7 +41,6 @@ class PetoneerSwitch(CoordinatorEntity, SwitchEntity):
         super().__init__(coordinator)
         self._state = None
         self._id = hass.data[DOMAIN]["conf"][CONF_SERIAL]#id
-        self.entity_id = DOMAIN + "." + self._id
         self.pet_api = coordinator.pet_api
         self.coordinator = coordinator
         self._attr_device_info = coordinator.get_device()

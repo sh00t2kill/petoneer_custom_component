@@ -36,10 +36,6 @@ class PetoneerSensor(CoordinatorEntity, SensorEntity):
         self._state = None
         self._id = hass.data[DOMAIN]["conf"][CONF_SERIAL]
         self._name = name
-        if name is None:
-            self.entity_id = DOMAIN + "." + self._id
-        else:
-            self.entity_id = DOMAIN + "." + self._id + "_" + name.replace(" ", "_").lower()
         self._attr_device_info = coordinator.get_device()
         self._attr_icon = icon
         self.data_attribute = data_attribute
